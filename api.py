@@ -2,22 +2,26 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+
+CAMINHO_VIDEO = "all_resort.mp4"
+
 # Endpoint 1: Sugestão de Produto
 @app.route('/sugestao-produto', methods=['POST'])
 def sugestao_produto():
     """
-    Recebe a necessidade do cliente e retorna uma mídia e texto.
+    Recebe a necessidade do cliente e retorna um vídeo e texto explicativo.
     """
 
     dados_recebidos = request.get_json()
     necessidade_cliente = dados_recebidos.get('necessidade', 'Nenhuma necessidade informada')
     print(f"Necessidade recebida do cliente: {necessidade_cliente}")
 
-    resposta = {
-        "url_video": "https://www.youtube.com/watch?v=HcthbX_oneE",
-        "texto_explicativo": "Entendi o seu interesse! Preparei este vídeo exclusivo do All Resort que pode te interessar."
-    }
-    return jsonify(resposta)
+    # Garante que o vídeo existe
+    if not os.path.exists(CAMINHO_VIDEO):
+        return jsonify({"erro": "Vídeo não encontrado"}), 404
+
+    # Enviar vídeo como arquivo
+    return send_file(CAMINHO_VIDEO, mimetype='video/mp4')
 
 
 # Endpoint 2: Encaminhar para Atendimento Humano
