@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
+import os
 
 app = Flask(__name__)
 
@@ -16,11 +17,9 @@ def sugestao_produto():
     necessidade_cliente = dados_recebidos.get('necessidade', 'Nenhuma necessidade informada')
     print(f"Necessidade recebida do cliente: {necessidade_cliente}")
 
-    # Garante que o vídeo existe
     if not os.path.exists(CAMINHO_VIDEO):
         return jsonify({"erro": "Vídeo não encontrado"}), 404
 
-    # Enviar vídeo como arquivo
     return send_file(CAMINHO_VIDEO, mimetype='video/mp4')
 
 
